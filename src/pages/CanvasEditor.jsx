@@ -446,9 +446,18 @@ export default function CanvasEditor() {
                   <span className="text-[10px]" style={{ color: 'var(--color-muted)' }}>{fontSize}px</span>
                 </div>
               </div>
-              {/* Canvas BG */}
+              {/* Canvas Background */}
+              <div>
+                <label className="text-[10px] font-600 uppercase tracking-wider block mb-2" style={{ color: 'var(--color-muted)' }}>Canvas Background</label>
+                <div className="flex gap-2 flex-wrap">
+                  {['#13121F','#FFFFFF','#0F172A','#FFF7ED','#EFF6FF','#F0FDF4'].map(c => (
+                    <button key={c} onClick={() => { fabricRef.current.backgroundColor = c; fabricRef.current.renderAll(); }}
+                      className="w-7 h-7 rounded-lg border-2"
+                      style={{ background: c, borderColor: 'var(--color-border)' }} />
+                  ))}
                 </div>
               </div>
+
               {/* Image Filters */}
               <div>
                 <label className="text-[10px] font-600 uppercase tracking-wider block mb-2" style={{ color: 'var(--color-muted)' }}>Image Filters</label>
