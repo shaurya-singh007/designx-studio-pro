@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useTransform, useSpring, useScroll } from 'framer-motion';
 import { Sparkles, Crown, Zap, Layers, Download, Share2, Star, ChevronRight, Play } from 'lucide-react';
 import axios from 'axios';
 import { useStore } from '../store/useStore';
@@ -37,6 +37,19 @@ export default function Landing() {
   const [stats] = useState({ designs: '2.4M+', users: '180K+', templates: '500+' });
   const [recent, setRecent] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // 3D Tilt Effect
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springConfig = { damping: 25, stiffness: 150 };
+  const springX = useSpring(mouseX, springConfig);
+  const springY = useSpring(mouseY, springConfig);
+  const rotateX = useTransform(springY, [-0.5, 0.5], ['15deg', '-15deg']);
+  const rotateY = useTransform(springX, [-0.5, 0.5], ['-15deg', '15deg']);
+
+  // Parallax Effect
+  const { scrollYProgress } = useScroll();
+  const yBg = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
 
   useEffect(() => {
     if (user) fetchRecent();
@@ -102,17 +115,38 @@ export default function Landing() {
         </motion.div>
 
         {/* 3D Hero Image */}
-        <motion.div variants={fadeUp} className="mt-10 relative px-4 flex justify-center">
-          <div className="absolute inset-0 top-1/2 -translate-y-1/2 w-[80%] max-w-[300px] aspect-square rounded-full blur-[80px] -z-10 mx-auto"
-               style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.4), rgba(245,158,11,0.2))' }} />
+        <motion.div 
+          variants={fadeUp} 
+          className="mt-10 relative px-4 flex justify-center"
+          onMouseMove={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const width = rect.width;
+            const height = rect.height;
+            const mouseXRel = e.clientX - rect.left;
+            const mouseYRel = e.clientY - rect.top;
+            mouseX.set(mouseXRel / width - 0.5);
+            mouseY.set(mouseYRel / height - 0.5);
+          }}
+          onMouseLeave={() => {
+            mouseX.set(0);
+            mouseY.set(0);
+          }}
+          style={{ perspective: 1000 }}
+        >
+          <motion.div className="absolute inset-0 top-1/2 -translate-y-1/2 w-[80%] max-w-[300px] aspect-square rounded-full blur-[80px] -z-10 mx-auto"
+               style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.4), rgba(245,158,11,0.2))', y: yBg }} />
           <motion.img 
             src={hero3D} 
             alt="DesignX 3D Canvas Abstract" 
-            className="w-full max-w-[340px] rounded-[32px] shadow-2xl object-cover border-[1px] border-[rgba(124,58,237,0.3)] animate-float"
+            className="w-full max-w-[340px] rounded-[32px] shadow-2xl object-cover border-[1px] border-[rgba(124,58,237,0.3)]"
             style={{ 
+              rotateX, 
+              rotateY,
+              transformStyle: "preserve-3d",
               boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5), 0 0 30px rgba(124,58,237,0.3)'
             }}
           />
+
         </motion.div>
       </motion.section>
 
