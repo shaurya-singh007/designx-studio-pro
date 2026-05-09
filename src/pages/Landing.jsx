@@ -7,9 +7,6 @@ import hero3D from '../assets/hero-3d.png';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-
-
 const FEATURES = [
   { icon: Layers, title: 'Infinite Canvas', desc: 'Design without boundaries on our AI-powered canvas engine' },
   { icon: Sparkles, title: 'AI Generation', desc: 'Generate stunning visuals with DALL·E integration in seconds' },
