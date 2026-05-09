@@ -233,18 +233,17 @@
 @media (pointer: fine) {
   * { cursor: none !important; }
   #custom-cursor {
-    width: 20px; height: 20px;
-    background: rgba(255,255,255,0.8);
+    width: 60px; height: 60px;
+    background: #ffffff;
     border-radius: 50%;
     position: fixed; pointer-events: none;
     z-index: 9999;
     transform: translate(-50%, -50%);
-    transition: width 0.25s ease, height 0.25s ease, background 0.25s ease;
+    transition: width 0.3s ease, height 0.3s ease;
     mix-blend-mode: difference;
   }
   #custom-cursor.expanded {
-    width: 80px; height: 80px;
-    background: rgba(255,255,255,1);
+    width: 120px; height: 120px;
   }
 }
 

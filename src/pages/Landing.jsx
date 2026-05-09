@@ -74,81 +74,59 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen px-4 pb-4 animate-fade-in">
+    <div className="min-h-screen px-4 pb-4 animate-fade-in relative z-10">
+      
+      {/* Live Video Background */}
+      <div className="fixed inset-0 w-full h-full -z-20 overflow-hidden">
+        <div className="absolute inset-0 bg-black/50 z-10 mix-blend-multiply" />
+        <video 
+          autoPlay loop muted playsInline
+          className="w-full h-full object-cover scale-110 blur-[2px]"
+          src="https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-connection-loop-14986-large.mp4"
+        />
+      </div>
 
       {/* Hero */}
+
       <motion.section className="pt-6 pb-8 text-center"
         initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.12 } } }}>
+        {/* Hero Text */}
         <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-5"
-          style={{ background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)' }}>
+          style={{ background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', backdropFilter: 'blur(10px)' }}>
           <Crown size={12} className="text-gold" />
           <span className="text-[11px] font-700 text-royal-light tracking-wider uppercase">Professional Design Studio</span>
         </motion.div>
 
-        <motion.h1 variants={fadeUp} className="text-4xl font-800 leading-[1.1] mb-4"
+        <motion.h1 variants={fadeUp} className="text-4xl font-800 leading-[1.1] mb-4 drop-shadow-2xl"
           style={{ letterSpacing: '-0.03em' }}>
-          <span className="text-platinum">Create</span>{' '}
-          <span style={{ background: 'linear-gradient(135deg, #7C3AED, #F59E0B)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+          <span className="text-white">Create</span>{' '}
+          <span style={{ background: 'linear-gradient(135deg, #A855F7, #FCD34D)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
             Stunning
           </span>
           <br />
-          <span className="text-platinum">Designs Fast</span>
+          <span className="text-white">Designs Fast</span>
         </motion.h1>
 
-        <motion.p variants={fadeUp} className="text-muted text-sm leading-relaxed mb-8 px-4">
+        <motion.p variants={fadeUp} className="text-white/80 text-sm leading-relaxed mb-8 px-4 font-500 drop-shadow-lg">
           A professional-grade design studio with AI superpowers. Posters, banners, social media — all in one place.
         </motion.p>
 
-        <motion.div variants={fadeUp} className="flex gap-3 justify-center flex-wrap">
+        <motion.div variants={fadeUp} className="flex gap-3 justify-center flex-wrap pb-12">
           <button className="btn-gold flex items-center gap-2 text-sm"
             onClick={() => navigate('/editor')}>
             <Zap size={16} strokeWidth={2.5} />
             Get Started Free
           </button>
           {!user && (
-            <button className="flex items-center gap-2 text-sm font-600 text-royal-light px-5 py-3 rounded-full"
-              style={{ border: '1px solid rgba(124,58,237,0.4)', background: 'rgba(124,58,237,0.1)' }}
+            <button className="flex items-center gap-2 text-sm font-600 text-white px-5 py-3 rounded-full"
+              style={{ border: '1px solid rgba(255,255,255,0.4)', background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(10px)' }}
               onClick={() => navigate('/auth')}>
               Sign In
             </button>
           )}
         </motion.div>
-
-        {/* 3D Hero Image */}
-        <motion.div 
-          variants={fadeUp} 
-          className="mt-10 relative px-4 flex justify-center"
-          onMouseMove={(e) => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const width = rect.width;
-            const height = rect.height;
-            const mouseXRel = e.clientX - rect.left;
-            const mouseYRel = e.clientY - rect.top;
-            mouseX.set(mouseXRel / width - 0.5);
-            mouseY.set(mouseYRel / height - 0.5);
-          }}
-          onMouseLeave={() => {
-            mouseX.set(0);
-            mouseY.set(0);
-          }}
-          style={{ perspective: 1000 }}
-        >
-          <motion.div className="absolute inset-0 top-1/2 -translate-y-1/2 w-[80%] max-w-[300px] aspect-square rounded-full blur-[80px] -z-10 mx-auto"
-               style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.4), rgba(245,158,11,0.2))', y: yBg }} />
-          <motion.img 
-            src={hero3D} 
-            alt="DesignX 3D Canvas Abstract" 
-            className="w-full max-w-[340px] rounded-[32px] shadow-2xl object-cover border-[1px] border-[rgba(124,58,237,0.3)]"
-            style={{ 
-              rotateX, 
-              rotateY,
-              transformStyle: "preserve-3d",
-              boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5), 0 0 30px rgba(124,58,237,0.3)'
-            }}
-          />
-
-        </motion.div>
       </motion.section>
+
 
       {/* Stats */}
 
