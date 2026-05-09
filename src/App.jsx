@@ -16,7 +16,7 @@ function Protected({ children }) {
   return user ? children : <Navigate to="/auth" replace />;
 }
 
-// ── Custom Cursor ────────────────────────────────────────────────
+// ── Custom Cursor & Magnetic Effects ─────────────────────────────
 function CustomCursor() {
   const ref = useRef(null);
   useEffect(() => {
@@ -29,16 +29,39 @@ function CustomCursor() {
     const expand = () => ref.current?.classList.add('expanded');
     const shrink = () => ref.current?.classList.remove('expanded');
     document.addEventListener('mousemove', onMove);
+    
+    // Magnetic logic
+    const magneticMove = (e, el) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      el.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+    };
+    const magneticLeave = (el) => {
+      el.style.transform = 'translate(0, 0)';
+    };
+
     const obs = new MutationObserver(() => {
-      document.querySelectorAll('button,a,[role="button"],.cursor-pointer').forEach((el) => {
+      document.querySelectorAll('button, a, [role="button"], .cursor-pointer, h1, p').forEach((el) => {
         el.addEventListener('mouseenter', expand);
         el.addEventListener('mouseleave', shrink);
+        
+        // Add magnetic effect to specific buttons
+        if (el.classList.contains('btn-primary') || el.classList.contains('btn-gold')) {
+          el.addEventListener('mousemove', (e) => magneticMove(e, el));
+          el.addEventListener('mouseleave', () => magneticLeave(el));
+        }
       });
     });
     obs.observe(document.body, { childList: true, subtree: true });
     return () => { document.removeEventListener('mousemove', onMove); obs.disconnect(); };
   }, []);
-  return <div id="custom-cursor" ref={ref} />;
+  return (
+    <>
+      <div id="custom-cursor" ref={ref} />
+      <div className="loader-overlay">DesignX</div>
+    </>
+  );
 }
 
 // ── App Shell ────────────────────────────────────────────────────

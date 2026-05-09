@@ -162,48 +162,48 @@ export default function Landing() {
         ))}
       </motion.div>
 
-      {/* Recent designs */}
+      {/* Recent designs (Infinite Carousel) */}
       {user && (
-        <section className="mb-8">
-          <div className="flex items-center justify-between mb-3">
+        <motion.section 
+          initial={{ opacity: 0, y: 80 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true, margin: "-50px" }}
+          className="mb-8 overflow-hidden"
+        >
+          <div className="flex items-center justify-between mb-3 px-2">
             <h2 className="text-sm font-700 text-platinum uppercase tracking-wider">Your Designs</h2>
             <button className="text-xs text-royal-light font-600 flex items-center gap-1" onClick={() => navigate('/profile')}>
               View all <ChevronRight size={12} />
             </button>
           </div>
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-            {recent.map((item, i) => (
-              <motion.div key={item.id} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 + i * 0.1 }}
-                className="flex-shrink-0 w-36 template-card" onClick={() => openDesign(item)}>
+          <div className="infinite-carousel pb-2">
+            {[...recent, ...recent].map((item, i) => (
+              <div key={`${item.id}-${i}`} className="flex-shrink-0 w-36 template-card" onClick={() => openDesign(item)}>
                 <div className="h-24 rounded-t-xl flex items-center justify-center text-white/10 text-xl font-800" 
                   style={{ background: item.canvasData?.bg || 'var(--bg-elevated)' }}>Dx</div>
                 <div className="p-2">
                   <div className="text-[11px] font-700 text-platinum truncate">{item.name}</div>
-                  <div className="text-[10px] text-muted">{item.type} · {new Date(item.updatedAt).toLocaleDateString()}</div>
+                  <div className="text-[10px] text-muted">{item.type}</div>
                 </div>
-              </motion.div>
-            ))}
-            {/* New design card */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
-              className="flex-shrink-0 w-36 h-[120px] rounded-xl flex flex-col items-center justify-center gap-1 cursor-pointer"
-              style={{ border: '2px dashed rgba(124,58,237,0.4)', background: 'rgba(124,58,237,0.05)' }}
-              onClick={() => { setActiveDesign(null); navigate('/editor'); }}>
-              <div className="w-8 h-8 rounded-full flex items-center justify-center"
-                style={{ background: 'rgba(124,58,237,0.2)' }}>
-                <span className="text-royal-light text-lg font-300">+</span>
               </div>
-              <span className="text-[10px] text-royal-light font-600">New Design</span>
-            </motion.div>
+            ))}
           </div>
-        </section>
+        </motion.section>
       )}
 
-      {/* Features */}
-      <section className="mb-8">
+      {/* Features with Scroll Reveal */}
+      <motion.section 
+        initial={{ opacity: 0, y: 80 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true, margin: "-50px" }}
+        className="mb-8"
+      >
         <h2 className="section-title mb-4 text-xl">Everything You Need</h2>
         <div className="grid grid-cols-2 gap-3">
           {FEATURES.map(({ icon: Icon, title, desc }, i) => (
-            <motion.div key={title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}
+            <motion.div key={title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }} viewport={{ once: true }}
               className="glass-card p-4">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
                 style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.3), rgba(245,158,11,0.2))' }}>
@@ -214,7 +214,8 @@ export default function Landing() {
             </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
+
 
       {/* Pro CTA Card */}
       <motion.section initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.6 }}

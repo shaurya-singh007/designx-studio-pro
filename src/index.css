@@ -233,19 +233,18 @@
 @media (pointer: fine) {
   * { cursor: none !important; }
   #custom-cursor {
-    width: 10px; height: 10px;
-    background: var(--color-primary);
+    width: 20px; height: 20px;
+    background: rgba(255,255,255,0.8);
     border-radius: 50%;
     position: fixed; pointer-events: none;
     z-index: 9999;
     transform: translate(-50%, -50%);
-    transition: width 0.12s, height 0.12s, background 0.12s, opacity 0.12s;
-    box-shadow: 0 0 14px var(--color-primary);
+    transition: width 0.25s ease, height 0.25s ease, background 0.25s ease;
+    mix-blend-mode: difference;
   }
   #custom-cursor.expanded {
-    width: 36px; height: 36px;
-    background: var(--color-primary-glow);
-    border: 1.5px solid var(--color-primary);
+    width: 80px; height: 80px;
+    background: rgba(255,255,255,1);
   }
 }
 
@@ -260,6 +259,31 @@
 .animate-fade-in { animation: fadeIn 0.45s ease; }
 .animate-slide-up { animation: slideUp 0.35s ease; }
 .animate-float { animation: float 5s ease-in-out infinite; }
+
+.infinite-carousel {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  animation: scrollX 20s linear infinite;
+}
+.infinite-carousel:hover { animation-play-state: paused; }
+
+@keyframes scrollX {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-50% - 6px)); }
+}
+
+.loader-overlay {
+  position: fixed; inset: 0;
+  background: var(--bg-base);
+  z-index: 99999;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--color-text); font-size: 2rem; font-weight: 800;
+  animation: fadeOut 1.5s ease forwards 0.5s;
+  pointer-events: none;
+}
+@keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+
 
 /* ══ UTILITIES ════════════════════════════════════════════════════ */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
