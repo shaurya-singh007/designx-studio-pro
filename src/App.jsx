@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useStore } from './store/useStore';
 import Landing from './pages/Landing';
@@ -16,18 +16,36 @@ function Protected({ children }) {
   return user ? children : <Navigate to="/auth" replace />;
 }
 
+import { motion, useMotionValue, useSpring } from 'framer-motion';
+
 // ── Custom Cursor & Magnetic Effects ─────────────────────────────
 function CustomCursor() {
-  const ref = useRef(null);
+  const cursorStyle = useStore((s) => s.cursorStyle);
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
+  
+  const springConfig = { damping: 25, stiffness: 200, mass: 0.5 };
+  const springX = useSpring(cursorX, springConfig);
+  const springY = useSpring(cursorY, springConfig);
+  
+  const [isHovered, setIsHovered] = useState(false);
+
   useEffect(() => {
+    if (cursorStyle !== 'magic') {
+      document.body.classList.remove('magic-cursor-enabled');
+      return;
+    }
+    
+    document.body.classList.add('magic-cursor-enabled');
+    
     const onMove = (e) => {
-      if (ref.current) {
-        ref.current.style.left = e.clientX + 'px';
-        ref.current.style.top = e.clientY + 'px';
-      }
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
     };
-    const expand = () => ref.current?.classList.add('expanded');
-    const shrink = () => ref.current?.classList.remove('expanded');
+
+    const expand = () => setIsHovered(true);
+    const shrink = () => setIsHovered(false);
+    
     document.addEventListener('mousemove', onMove);
     
     // Magnetic logic
@@ -46,7 +64,6 @@ function CustomCursor() {
         el.addEventListener('mouseenter', expand);
         el.addEventListener('mouseleave', shrink);
         
-        // Add magnetic effect to specific buttons
         if (el.classList.contains('btn-primary') || el.classList.contains('btn-gold')) {
           el.addEventListener('mousemove', (e) => magneticMove(e, el));
           el.addEventListener('mouseleave', () => magneticLeave(el));
@@ -54,15 +71,33 @@ function CustomCursor() {
       });
     });
     obs.observe(document.body, { childList: true, subtree: true });
-    return () => { document.removeEventListener('mousemove', onMove); obs.disconnect(); };
-  }, []);
+    return () => { 
+      document.removeEventListener('mousemove', onMove); 
+      obs.disconnect(); 
+      document.body.classList.remove('magic-cursor-enabled');
+    };
+  }, [cursorStyle, cursorX, cursorY]);
+
   return (
     <>
-      <div id="custom-cursor" ref={ref} />
+      {cursorStyle === 'magic' && (
+        <>
+          <motion.div 
+            id="custom-cursor" 
+            className={isHovered ? 'expanded' : ''}
+            style={{ x: springX, y: springY }} 
+          />
+          <motion.div 
+            id="custom-cursor-dot" 
+            style={{ x: cursorX, y: cursorY }} 
+          />
+        </>
+      )}
       <div className="loader-overlay">DesignX</div>
     </>
   );
 }
+
 
 // ── App Shell ────────────────────────────────────────────────────
 function AppShell() {

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Crown, Star, Zap, Settings, LogOut, Edit3, Award, TrendingUp, Image, Download, ChevronRight, Bell, Shield, HelpCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useStore } from '../store/useStore';
 
 const PLANS = [
   { id: 'free', name: 'Free', price: '$0', features: ['5 AI credits/month', '10 templates', 'PNG export (watermark)', '5 saved designs'], current: true },
@@ -132,10 +133,42 @@ export default function Profile() {
 
       {/* Settings */}
       <div className="px-4 mb-6">
+        <h2 className="text-xs font-700 text-platinum uppercase tracking-wider mb-3">Preferences</h2>
+        <div className="glass-card overflow-hidden mb-4">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-[rgba(124,58,237,0.1)]">
+            <div className="flex items-center gap-3">
+              <Settings size={16} className="text-royal-light" />
+              <div>
+                <div className="text-[11px] font-600 text-platinum">Magic Cursor</div>
+                <div className="text-[10px] text-muted">Awwwards-style trailing cursor</div>
+              </div>
+            </div>
+            <button 
+              onClick={useStore((s) => s.toggleCursor)}
+              className={`w-10 h-5 rounded-full transition-colors relative ${useStore((s) => s.cursorStyle) === 'magic' ? 'bg-[#7C3AED]' : 'bg-gray-600'}`}>
+              <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform ${useStore((s) => s.cursorStyle) === 'magic' ? 'translate-x-5' : 'translate-x-0'}`} />
+            </button>
+          </div>
+          
+          <div className="flex items-center justify-between px-4 py-3">
+            <div className="flex items-center gap-3">
+              <Star size={16} className="text-royal-light" />
+              <div>
+                <div className="text-[11px] font-600 text-platinum">Dark Mode</div>
+                <div className="text-[10px] text-muted">Toggle application theme</div>
+              </div>
+            </div>
+            <button 
+              onClick={useStore((s) => s.toggleTheme)}
+              className={`w-10 h-5 rounded-full transition-colors relative ${useStore((s) => s.theme) === 'dark' ? 'bg-[#7C3AED]' : 'bg-gray-600'}`}>
+              <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform ${useStore((s) => s.theme) === 'dark' ? 'translate-x-5' : 'translate-x-0'}`} />
+            </button>
+          </div>
+        </div>
+
         <h2 className="text-xs font-700 text-platinum uppercase tracking-wider mb-3">Account</h2>
         <div className="glass-card overflow-hidden">
           {[
-            { Icon: Settings, label: 'Preferences', sub: 'Theme, language, notifications' },
             { Icon: Bell, label: 'Notifications', sub: 'Push & email alerts' },
             { Icon: Shield, label: 'Privacy & Security', sub: 'Password, 2FA, data' },
             { Icon: HelpCircle, label: 'Help & Support', sub: 'Docs, chat, tickets' },

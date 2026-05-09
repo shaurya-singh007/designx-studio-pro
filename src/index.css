@@ -231,19 +231,28 @@
 
 /* ══ CUSTOM CURSOR ════════════════════════════════════════════════ */
 @media (pointer: fine) {
-  * { cursor: none !important; }
+  body.magic-cursor-enabled * { cursor: none !important; }
   #custom-cursor {
     width: 60px; height: 60px;
     background: #ffffff;
     border-radius: 50%;
     position: fixed; pointer-events: none;
-    z-index: 9999;
+    z-index: 9998;
     transform: translate(-50%, -50%);
-    transition: width 0.3s ease, height 0.3s ease;
+    transition: width 0.3s ease, height 0.3s ease, opacity 0.3s;
     mix-blend-mode: difference;
   }
   #custom-cursor.expanded {
     width: 120px; height: 120px;
+  }
+  #custom-cursor-dot {
+    width: 6px; height: 6px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    position: fixed; pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px var(--color-primary);
   }
 }
 

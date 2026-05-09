@@ -4,13 +4,18 @@ import { persist } from 'zustand/middleware';
 export const useStore = create(
   persist(
     (set, get) => ({
-      // ── Theme ──────────────────────────────────────
+      // ── Theme & Preferences ────────────────────────
       theme: 'dark',
       toggleTheme: () => {
         const next = get().theme === 'dark' ? 'light' : 'dark';
         set({ theme: next });
         document.documentElement.setAttribute('data-theme', next);
       },
+      cursorStyle: 'magic', // 'magic' or 'system'
+      toggleCursor: () => {
+        set({ cursorStyle: get().cursorStyle === 'magic' ? 'system' : 'magic' });
+      },
+
 
       // ── Auth ───────────────────────────────────────
       user: null,
@@ -39,7 +44,7 @@ export const useStore = create(
     }),
     {
       name: 'designx-store',
-      partialize: (s) => ({ theme: s.theme, user: s.user, token: s.token, designs: s.designs }),
+      partialize: (s) => ({ theme: s.theme, cursorStyle: s.cursorStyle, user: s.user, token: s.token, designs: s.designs }),
     }
   )
 );
