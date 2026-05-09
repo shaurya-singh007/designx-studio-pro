@@ -1,0 +1,110 @@
+import { useEffect, useRef } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { useStore } from './store/useStore';
+import Landing from './pages/Landing';
+import Auth from './pages/Auth';
+import CanvasEditor from './pages/CanvasEditor';
+import Templates from './pages/Templates';
+import Profile from './pages/Profile';
+import BottomNav from './components/BottomNav';
+import TopBar from './components/TopBar';
+import Toasts from './components/Toasts';
+
+// ── Protected Route ──────────────────────────────────────────────
+function Protected({ children }) {
+  const user = useStore((s) => s.user);
+  return user ? children : <Navigate to="/auth" replace />;
+}
+
+// ── Custom Cursor ────────────────────────────────────────────────
+function CustomCursor() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const onMove = (e) => {
+      if (ref.current) {
+        ref.current.style.left = e.clientX + 'px';
+        ref.current.style.top = e.clientY + 'px';
+      }
+    };
+    const expand = () => ref.current?.classList.add('expanded');
+    const shrink = () => ref.current?.classList.remove('expanded');
+    document.addEventListener('mousemove', onMove);
+    const obs = new MutationObserver(() => {
+      document.querySelectorAll('button,a,[role="button"],.cursor-pointer').forEach((el) => {
+        el.addEventListener('mouseenter', expand);
+        el.addEventListener('mouseleave', shrink);
+      });
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+    return () => { document.removeEventListener('mousemove', onMove); obs.disconnect(); };
+  }, []);
+  return <div id="custom-cursor" ref={ref} />;
+}
+
+// ── App Shell ────────────────────────────────────────────────────
+function AppShell() {
+  const location = useLocation();
+  const theme = useStore((s) => s.theme);
+  const isCanvas = location.pathname === '/editor';
+  const isAuth = location.pathname === '/auth';
+  const isLanding = location.pathname === '/';
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  if (isAuth || isLanding) {
+    return (
+      <div className="relative">
+        <Toasts />
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/auth" element={<Auth />} />
+        </Routes>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative min-h-dvh max-w-[430px] mx-auto overflow-hidden"
+      style={{ background: 'var(--bg-base)' }}>
+      {/* Ambient glow */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[-15%] left-1/2 -translate-x-1/2 w-[500px] h-[350px] rounded-full opacity-40"
+          style={{ background: 'radial-gradient(circle, var(--color-primary) 0%, transparent 70%)' }} />
+        <div className="absolute bottom-[15%] right-[-10%] w-[250px] h-[250px] rounded-full opacity-25"
+          style={{ background: 'radial-gradient(circle, var(--color-accent1) 0%, transparent 70%)' }} />
+      </div>
+
+      <Toasts />
+      {!isCanvas && <TopBar />}
+
+      <main className={`relative z-10 ${isCanvas ? '' : 'pt-[60px] pb-[72px]'}`}>
+        <Routes>
+          <Route path="/home" element={<Protected><Landing /></Protected>} />
+          <Route path="/dashboard" element={<Protected><Landing /></Protected>} />
+          <Route path="/editor" element={<Protected><CanvasEditor /></Protected>} />
+          <Route path="/templates" element={<Protected><Templates /></Protected>} />
+          <Route path="/profile" element={<Protected><Profile /></Protected>} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </main>
+
+      {!isCanvas && <BottomNav />}
+    </div>
+  );
+}
+
+export default function App() {
+  const theme = useStore((s) => s.theme);
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  return (
+    <BrowserRouter>
+      <CustomCursor />
+      <AppShell />
+    </BrowserRouter>
+  );
+}
