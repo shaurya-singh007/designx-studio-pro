@@ -20,9 +20,15 @@ const io = new Server(server, { cors: { origin: process.env.FRONTEND_URL || 'htt
 
 // ── Middleware ──────────────────────────────────────
 app.use(helmet({ contentSecurityPolicy: false }));
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173', credentials: true }));
+const corsOptions = {
+  origin: [process.env.FRONTEND_URL || 'http://localhost:5173', 'https://shaurya-singh007.github.io'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+};
+app.use(cors(corsOptions));
 app.use(morgan('dev'));
 app.use(express.json({ limit: '10mb' }));
+
 
 // Rate limiting
 app.use('/api', rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: { error: 'Too many requests' } }));
