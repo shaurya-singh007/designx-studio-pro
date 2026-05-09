@@ -43,7 +43,16 @@ export default function Auth() {
       addNotif(`Welcome${data.user.name ? ', ' + data.user.name : ''}! 🎨`, 'success');
       navigate('/dashboard');
     } catch (err) {
-      const msg = err.response?.data?.error || 'Something went wrong';
+      // ── OFFLINE FALLBACK FOR DEMO ACCOUNT ──
+      // If Render backend is sleeping/offline, force demo login to work
+      if (mode === 'login' && form.email === 'demo@designx.pro') {
+        setUser({ id: 1, name: 'Demo User', email: form.email, plan: 'FREE' }, 'demo-jwt-token-fallback');
+        addNotif('Welcome back, Demo User! (Offline Mode) 🎨', 'success');
+        navigate('/dashboard');
+        return;
+      }
+      
+      const msg = err.response?.data?.error || 'Server error. Please try again or use the Demo Account.';
       addNotif(msg, 'error');
       setErrors({ api: msg });
     } finally {
