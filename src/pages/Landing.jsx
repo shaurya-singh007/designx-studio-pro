@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Sparkles, Crown, Zap, Layers, Download, Share2, Star, ChevronRight, Play } from 'lucide-react';
 import axios from 'axios';
 import { useStore } from '../store/useStore';
 import hero3D from '../assets/hero-3d.png';
+
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
