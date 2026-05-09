@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Sparkles, Crown, Zap, Layers, Download, Share2, Star, ChevronRight, Play } from 'lucide-react';
 import axios from 'axios';
 import { useStore } from '../store/useStore';
+import hero3D from '../assets/hero-3d.png';
+
+const API = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -98,9 +100,24 @@ export default function Landing() {
             </button>
           )}
         </motion.div>
+
+        {/* 3D Hero Image */}
+        <motion.div variants={fadeUp} className="mt-10 relative px-4 flex justify-center">
+          <div className="absolute inset-0 top-1/2 -translate-y-1/2 w-[80%] max-w-[300px] aspect-square rounded-full blur-[80px] -z-10 mx-auto"
+               style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.4), rgba(245,158,11,0.2))' }} />
+          <motion.img 
+            src={hero3D} 
+            alt="DesignX 3D Canvas Abstract" 
+            className="w-full max-w-[340px] rounded-[32px] shadow-2xl object-cover border-[1px] border-[rgba(124,58,237,0.3)] animate-float"
+            style={{ 
+              boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5), 0 0 30px rgba(124,58,237,0.3)'
+            }}
+          />
+        </motion.div>
       </motion.section>
 
       {/* Stats */}
+
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
         className="grid grid-cols-3 gap-3 mb-8">
         {Object.entries(stats).map(([key, val]) => (
