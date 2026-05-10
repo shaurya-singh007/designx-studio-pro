@@ -9,24 +9,29 @@ export const CameraController = () => {
   const { camera } = useThree();
 
   useEffect(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#tunnel-sections-container",
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1, // Smooth scrubbing
-      }
-    });
+    // Delay slightly to ensure DOM is ready
+    const timer = setTimeout(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#tunnel-sections-container",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1.5,
+          invalidateOnRefresh: true,
+        }
+      });
 
-    // Animate camera Z position over the course of the scroll container
-    // Z depth maps to our content: Hero(0), Features(-20), AI(-40), Pricing(-60), Contact(-80)
-    tl.to(camera.position, {
-      z: -80,
-      ease: "none"
-    });
+      tl.to(camera.position, {
+        z: -100, // Move a bit further for better exit
+        ease: "none"
+      });
+
+      ScrollTrigger.refresh();
+    }, 100);
 
     return () => {
-      tl.kill();
+      clearTimeout(timer);
+      ScrollTrigger.getAll().forEach(t => t.kill());
     };
   }, [camera]);
 

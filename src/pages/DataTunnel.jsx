@@ -56,7 +56,9 @@ const DataTunnel = () => {
           <fog attach="fog" args={['#0B0F1A', 5, 40]} />
           
           <CameraController />
-          <Scene />
+          <React.Suspense fallback={null}>
+            <Scene />
+          </React.Suspense>
           
           <EffectComposer disableNormalPass>
             <Bloom luminanceThreshold={0.2} mipmapBlur intensity={1.5} radius={0.4} />
