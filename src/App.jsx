@@ -9,6 +9,8 @@ import Profile from './pages/Profile';
 import BottomNav from './components/BottomNav';
 import TopBar from './components/TopBar';
 import Toasts from './components/Toasts';
+import DataTunnel from './pages/DataTunnel';
+
 
 // ── Protected Route ──────────────────────────────────────────────
 function Protected({ children }) {
@@ -106,17 +108,19 @@ function AppShell() {
   const isCanvas = location.pathname === '/editor';
   const isAuth = location.pathname === '/auth';
   const isLanding = location.pathname === '/';
+  const isTunnel = location.pathname === '/tunnel';
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  if (isAuth || isLanding) {
+  if (isAuth || isLanding || isTunnel) {
     return (
       <div className="relative">
         <Toasts />
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/tunnel" element={<DataTunnel />} />
           <Route path="/auth" element={<Auth />} />
         </Routes>
       </div>

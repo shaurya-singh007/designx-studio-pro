@@ -3,7 +3,11 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
-      fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
+      fontFamily: {
+        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        exo: ['Exo', 'sans-serif'],
+        mono: ['Roboto Mono', 'monospace'],
+      },
       colors: {
         bg: { base: 'var(--bg-base)', card: 'var(--bg-card)', elevated: 'var(--bg-elevated)' },
         primary: 'var(--color-primary)',
@@ -14,6 +18,12 @@ export default {
         'c-text': 'var(--color-text)',
         muted: 'var(--color-muted)',
         border: 'var(--color-border)',
+        tunnel: {
+          bg: '#0B0F1A',
+          primary: '#06b6d4',
+          accent: '#ec4899',
+          gold: '#CA8A04',
+        },
       },
       animation: {
         'float': 'float 5s ease-in-out infinite',
