@@ -1,10 +1,14 @@
 import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Text, Float as DreiFloat } from '@react-three/drei';
+import { Text, Float as DreiFloat, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
+import heroImage from '../../assets/hero-3d.png';
 
-const DataPanel = ({ position, rotation, index, color = "#4ade80", emissive = "#06b6d4" }) => {
+const DataPanel = ({ position, rotation, index, color = "#4ade80", emissive = "#06b6d4", usePhoto = false }) => {
   const meshRef = useRef();
+  
+  // Load texture only if usePhoto is true. We'll reuse heroImage as a placeholder for the photos they mentioned.
+  const texture = useTexture(usePhoto ? heroImage : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
   
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
@@ -18,14 +22,15 @@ const DataPanel = ({ position, rotation, index, color = "#4ade80", emissive = "#
       <mesh ref={meshRef} position={position} rotation={rotation}>
         <planeGeometry args={[2, 1.2]} />
         <meshPhysicalMaterial 
-          color="#0B0F1A" 
-          emissive={color} 
+          map={usePhoto ? texture : null}
+          color={usePhoto ? "#ffffff" : "#0B0F1A"} 
+          emissive={usePhoto ? "#000000" : color} 
           emissiveIntensity={0.3}
           transparent 
-          opacity={0.7}
+          opacity={usePhoto ? 0.9 : 0.7}
           roughness={0.1}
-          metalness={0.8}
-          transmission={0.5}
+          metalness={0.5}
+          transmission={usePhoto ? 0 : 0.5}
           thickness={1}
         />
         <mesh position={[0, 0, 0.01]}>
@@ -151,22 +156,22 @@ export const Scene = () => {
       
       {/* Hero ambient panels (Z = -5 to -15) */}
       {[...Array(5)].map((_, i) => (
-        <DataPanel key={`hero-${i}`} index={i} position={[(Math.random() - 0.5) * 15, (Math.random() - 0.5) * 10, -5 - Math.random() * 10]} rotation={[0, 0, Math.random()]} />
+        <DataPanel key={`hero-${i}`} index={i} usePhoto={i % 2 === 0} position={[(Math.random() - 0.5) * 15, (Math.random() - 0.5) * 10, -5 - Math.random() * 10]} rotation={[0, 0, Math.random()]} />
       ))}
 
       {/* Features ambient panels (Z = -25 to -35) */}
       {[...Array(5)].map((_, i) => (
-        <DataPanel key={`feat-${i}`} index={i} color="#ec4899" emissive="#ec4899" position={[(Math.random() - 0.5) * 15, (Math.random() - 0.5) * 10, -25 - Math.random() * 10]} rotation={[0, 0, Math.random()]} />
+        <DataPanel key={`feat-${i}`} index={i} usePhoto={i % 3 === 0} color="#ec4899" emissive="#ec4899" position={[(Math.random() - 0.5) * 15, (Math.random() - 0.5) * 10, -25 - Math.random() * 10]} rotation={[0, 0, Math.random()]} />
       ))}
 
       {/* AI ambient panels (Z = -45 to -55) */}
       {[...Array(5)].map((_, i) => (
-        <DataPanel key={`ai-${i}`} index={i} color="#4ade80" emissive="#4ade80" position={[(Math.random() - 0.5) * 15, (Math.random() - 0.5) * 10, -45 - Math.random() * 10]} rotation={[0, 0, Math.random()]} />
+        <DataPanel key={`ai-${i}`} index={i} usePhoto={i % 2 !== 0} color="#4ade80" emissive="#4ade80" position={[(Math.random() - 0.5) * 15, (Math.random() - 0.5) * 10, -45 - Math.random() * 10]} rotation={[0, 0, Math.random()]} />
       ))}
 
       {/* Pricing ambient panels (Z = -65 to -75) */}
       {[...Array(5)].map((_, i) => (
-        <DataPanel key={`price-${i}`} index={i} color="#CA8A04" emissive="#CA8A04" position={[(Math.random() - 0.5) * 15, (Math.random() - 0.5) * 10, -65 - Math.random() * 10]} rotation={[0, 0, Math.random()]} />
+        <DataPanel key={`price-${i}`} index={i} usePhoto={i === 1} color="#CA8A04" emissive="#CA8A04" position={[(Math.random() - 0.5) * 15, (Math.random() - 0.5) * 10, -65 - Math.random() * 10]} rotation={[0, 0, Math.random()]} />
       ))}
 
       {/* Floor Grid */}

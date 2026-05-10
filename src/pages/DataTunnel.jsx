@@ -46,7 +46,7 @@ const DataTunnel = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full bg-[#0B0F1A] overflow-hidden">
+    <div ref={containerRef} className="relative w-full bg-[#0B0F1A]">
       <CustomCursor />
       
       {/* 3D Canvas Fixed Background */}
