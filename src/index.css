@@ -5,22 +5,20 @@
 
 /* ══ CSS VARIABLES — DARK (default) ══════════════════════════════ */
 :root, [data-theme='dark'] {
-  --bg-base: #09090F;
-  --bg-card: #13121F;
-  --bg-elevated: #1A1830;
-  --bg-glass: rgba(19,18,31,0.75);
-  --color-primary: #8B5CF6;
-  --color-primary-glow: rgba(139,92,246,0.35);
-  --color-accent1: #EC4899;   /* fuchsia/pink */
-  --color-accent2: #06B6D4;   /* cyan/teal    */
-  --color-accent3: #F59E0B;   /* amber/gold   */
-  --color-accent4: #10B981;   /* emerald      */
-  --color-text: #EDE9FE;
-  --color-muted: #7C7A8D;
-  --color-border: rgba(139,92,246,0.2);
-  --color-surface: #1A1830;
-  --shadow-card: 0 8px 32px rgba(0,0,0,0.6);
-  --shadow-glow: 0 0 24px rgba(139,92,246,0.4);
+  --bg-base: #050505;
+  --bg-card: #0a0a0a;
+  --bg-elevated: #111111;
+  --bg-glass: rgba(10,10,10,0.6);
+  --color-primary: #ffffff;
+  --color-primary-glow: rgba(255,255,255,0.1);
+  --color-accent1: #555555;
+  --color-accent2: #888888;
+  --color-text: #ffffff;
+  --color-muted: #888888;
+  --color-border: rgba(255,255,255,0.08);
+  --color-surface: #111111;
+  --shadow-card: 0 20px 40px rgba(0,0,0,0.4);
+  --shadow-glow: 0 0 40px rgba(255,255,255,0.05);
 }
 
 /* ══ CSS VARIABLES — LIGHT ════════════════════════════════════════ */
@@ -50,7 +48,7 @@
   body {
     background-color: var(--bg-base);
     color: var(--color-text);
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-family: 'Jost', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     transition: background-color 0.3s ease, color 0.3s ease;
     overscroll-behavior: none;
@@ -74,41 +72,45 @@
   .glass-card:hover { border-color: var(--color-primary); }
 
   .btn-primary {
-    background: linear-gradient(135deg, var(--color-primary), var(--color-accent1));
-    color: #fff;
-    font-weight: 700;
-    border-radius: 50px;
-    padding: 12px 28px;
+    background: #ffffff;
+    color: #000000;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 14px 32px;
     cursor: pointer;
     border: none;
-    box-shadow: 0 0 20px var(--color-primary-glow);
-    transition: all 0.25s;
-    letter-spacing: 0.03em;
+    transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-size: 13px;
   }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px var(--color-primary-glow); }
+  .btn-primary:hover { transform: translateY(-2px); background: #f0f0f0; }
 
   .btn-gold {
-    background: linear-gradient(135deg, var(--color-accent3), #FCD34D);
-    color: #09090F;
-    font-weight: 800;
-    border-radius: 50px;
-    padding: 12px 28px;
+    background: transparent;
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 14px 32px;
     cursor: pointer;
-    border: none;
-    box-shadow: 0 0 20px rgba(245,158,11,0.35);
-    transition: all 0.25s;
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1);
+    text-transform: uppercase;
+    font-size: 13px;
   }
-  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(245,158,11,0.5); }
+  .btn-gold:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.4); }
 
   .btn-ghost {
     background: transparent;
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-    border-radius: 50px;
-    padding: 11px 24px;
+    color: #ffffff;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 14px 32px;
     cursor: pointer;
     font-weight: 600;
-    transition: all 0.2s;
+    transition: all 0.3s;
+    font-size: 13px;
+    text-transform: uppercase;
   }
   .btn-ghost:hover { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-glow); }
 
@@ -308,4 +310,20 @@
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ── Tunnel experience (DesignX cinematic scroll corridor) ── */
+html.tunnel-page {
+  overflow-x: clip;
+}
+
+.tunnel-hit {
+  cursor: pointer !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tunnel-fixed-overlay *,
+  .tunnel-overlay-card {
+    transition-duration: 0.001ms !important;
+  }
 }

@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
-        exo: ['Exo', 'sans-serif'],
+        sans: ['Jost', 'system-ui', 'sans-serif'],
+        serif: ['"Bodoni Moda"', 'serif'],
         mono: ['Roboto Mono', 'monospace'],
       },
       colors: {

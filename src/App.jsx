@@ -10,6 +10,7 @@ import BottomNav from './components/BottomNav';
 import TopBar from './components/TopBar';
 import Toasts from './components/Toasts';
 import DataTunnel from './pages/DataTunnel';
+import InteractiveHero from './components/UI/InteractiveHero';
 
 
 // ── Protected Route ──────────────────────────────────────────────
@@ -105,6 +106,7 @@ function CustomCursor() {
 function AppShell() {
   const location = useLocation();
   const theme = useStore((s) => s.theme);
+  const user = useStore((s) => s.user);
   const isCanvas = location.pathname === '/editor';
   const isAuth = location.pathname === '/auth';
   const isLanding = location.pathname === '/';
@@ -128,16 +130,9 @@ function AppShell() {
   }
 
   return (
-    <div className="relative min-h-dvh max-w-[430px] mx-auto overflow-hidden"
+    <div className="relative min-h-screen w-full overflow-x-hidden"
       style={{ background: 'var(--bg-base)' }}>
-      {/* Ambient glow */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-15%] left-1/2 -translate-x-1/2 w-[500px] h-[350px] rounded-full opacity-40"
-          style={{ background: 'radial-gradient(circle, var(--color-primary) 0%, transparent 70%)' }} />
-        <div className="absolute bottom-[15%] right-[-10%] w-[250px] h-[250px] rounded-full opacity-25"
-          style={{ background: 'radial-gradient(circle, var(--color-accent1) 0%, transparent 70%)' }} />
-      </div>
-
+      {!user && <InteractiveHero />}
       <Toasts />
       {!isCanvas && <TopBar />}
 

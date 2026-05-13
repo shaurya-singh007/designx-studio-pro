@@ -61,18 +61,9 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
-      style={{ background: 'var(--bg-base)' }}>
+    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
 
-      {/* Background orbs */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] rounded-full opacity-20"
-          style={{ background: 'radial-gradient(circle, var(--color-primary) 0%, transparent 70%)' }} />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[350px] h-[350px] rounded-full opacity-20"
-          style={{ background: 'radial-gradient(circle, var(--color-accent1) 0%, transparent 70%)' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-10"
-          style={{ background: 'radial-gradient(circle, var(--color-accent2) 0%, transparent 70%)' }} />
-      </div>
+
 
       {/* Back to landing */}
       <button onClick={() => navigate('/')}

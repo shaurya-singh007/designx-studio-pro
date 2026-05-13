@@ -1,146 +1,141 @@
-import React, { useRef, useLayoutEffect } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Sparkles, Cpu, Layers, CreditCard, Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useTunnel } from './TunnelContext';
 
-gsap.registerPlugin(ScrollTrigger);
+const ZONES = [
+  {
+    id: 'hero',
+    eyebrow: 'DesignX Studio Pro',
+    title: (
+      <>
+        Glide through{' '}
+        <span className="bg-gradient-to-r from-cyan-400 via-violet-400 to-amber-300 bg-clip-text text-transparent">
+          the neural tunnel
+        </span>
+      </>
+    ),
+    body: 'A cinematic ingress for the same stack that powers your editor — scroll to advance along the Z-axis. Each depth band syncs to real product story beats.',
+    cta: { label: 'Open editor', to: '/auth', accent: true },
+    icon: Sparkles,
+  },
+  {
+    id: 'features',
+    eyebrow: 'Depth · −20',
+    title: <>Precision canvas. Studio-grade overlays.</>,
+    body: 'Fabric-driven editor, tactile glass UI, royalty-grade exports. Layers, vectors, typography, textures — synced to the corridor as you glide forward.',
+    cta: { label: 'Explore templates', to: '/templates' },
+    icon: Layers,
+  },
+  {
+    id: 'ai',
+    eyebrow: 'Depth · −40',
+    title: <>AI tooling in the datapath.</>,
+    body: 'Image generation lanes, typography agents, remix flows — surfaced as luminous panels drifting past while your scroll holds the conductor’s baton.',
+    cta: { label: 'Trial AI credits', to: '/dashboard' },
+    icon: Cpu,
+  },
+  {
+    id: 'pricing',
+    eyebrow: 'Depth · −60',
+    title: <>Clear tiers. No noise.</>,
+    body: 'Free for exploration, Pro for scale, VIP for fleets. Locked formats and HD exports unwrap as you deepen into the corridor.',
+    cta: { label: 'Upgrade path', to: '/profile' },
+    icon: CreditCard,
+  },
+  {
+    id: 'contact',
+    eyebrow: 'Depth · −80',
+    title: <>Transmit when ready.</>,
+    body: 'Deploy this experience on Vercel, wire the Express lane, authenticate with JWT. Ping the maintainers once you emerge from the glow.',
+    cta: { label: 'Authenticate', to: '/auth' },
+    secondary: { label: 'Back home', to: '/' },
+    icon: Mail,
+  },
+];
 
-export const Sections = () => {
-  const sectionsRef = useRef([]);
-  const setSectionRef = (el, index) => {
-    sectionsRef.current[index] = el;
-  };
+export function TunnelSectionsOverlay() {
+  const { activeZone } = useTunnel();
 
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      sectionsRef.current.forEach((section, i) => {
-        if (!section) return;
-
-        const title = section.querySelector('.tunnel-title');
-        const text = section.querySelectorAll('.tunnel-text');
-
-        // Entry animation
-        gsap.fromTo(title, 
-          { opacity: 0, y: 50, scale: 0.9, filter: 'blur(10px)' },
-          { 
-            opacity: 1, 
-            y: 0, 
-            scale: 1, 
-            filter: 'blur(0px)',
-            scrollTrigger: {
-              trigger: section,
-              start: "top 70%",
-              end: "top 30%",
-              scrub: 1,
-            }
-          }
-        );
-
-        if (text.length) {
-          gsap.fromTo(text, 
-            { opacity: 0, y: 30 },
-            { 
-              opacity: 1, 
-              y: 0, 
-              stagger: 0.1,
-              scrollTrigger: {
-                trigger: section,
-                start: "top 60%",
-                end: "top 20%",
-                scrub: 1,
-              }
-            }
-          );
-        }
-        
-        // Exit animation (fade out when leaving, except for the last section)
-        if (i < sectionsRef.current.length - 1) {
-          gsap.to(section, {
-            opacity: 0,
-            y: -50,
-            filter: 'blur(10px)',
-            scrollTrigger: {
-              trigger: section,
-              start: "bottom 60%",
-              end: "bottom 20%",
-              scrub: 1,
-            }
-          });
-        }
-      });
-    });
-
-    return () => ctx.revert();
-  }, []);
+  const zone = useMemo(() => ZONES[Math.min(activeZone, ZONES.length - 1)], [activeZone]);
+  const Icon = zone.icon;
 
   return (
-    <div id="tunnel-sections-container" className="w-full text-white pointer-events-none relative z-10">
-      
-      {/* Hero Section */}
-      <section ref={(el) => setSectionRef(el, 0)} className="h-screen flex items-center justify-center px-4 md:px-20 pointer-events-auto">
-        <div className="text-center max-w-4xl mx-auto">
-          <h1 className="tunnel-title text-6xl md:text-8xl font-black mb-6 tracking-tighter font-exo">
-            DATATUNNEL <span className="text-[#CA8A04] glow-text">PRO</span>
-          </h1>
-          <p className="tunnel-text text-[#06b6d4] font-mono text-xl uppercase tracking-widest bg-black/30 backdrop-blur-sm p-4 rounded-lg inline-block border border-[#06b6d4]/30">
-            Scroll to enter the dimension
-          </p>
-        </div>
-      </section>
+    <div className="tunnel-fixed-overlay fixed inset-0 z-30 flex items-center justify-center px-6 pt-28 pb-32 md:pb-36 pointer-events-none">
+      <div className="w-full max-w-[min(100%,560px)]">
+        <AnimatePresence mode="wait">
+          <motion.article
+            key={zone.id}
+            role="article"
+            aria-live="polite"
+            initial={{ opacity: 0, y: 48, scale: 0.97, filter: 'blur(12px)' }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, y: -32, scale: 0.98, filter: 'blur(10px)' }}
+            transition={{
+              opacity: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
+              y: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+              scale: { duration: 0.58 },
+              filter: { duration: 0.52 },
+            }}
+            className="tunnel-overlay-card rounded-[28px] border border-white/12 bg-black/58 px-10 py-10 shadow-[0_40px_120px_rgba(6,182,236,0.12)] backdrop-blur-2xl pointer-events-auto md:px-14 md:py-12"
+          >
+            <motion.div layout className="flex items-start gap-4">
+              <div className="mt-1 rounded-2xl border border-white/12 bg-white/5 p-3 text-cyan-300 shadow-[0_0_34px_rgba(34,211,238,0.45)]">
+                <Icon strokeWidth={1.85} size={26} aria-hidden />
+              </div>
+              <div className="space-y-4 flex-1 min-w-0">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-cyan-200/85 font-mono">
+                  {zone.eyebrow}
+                </p>
+                <h2 className="text-4xl md:text-[2.85rem] font-extrabold leading-[1.05] tracking-tight text-white">{zone.title}</h2>
+                <p className="text-[15px] md:text-[16px] text-slate-300/92 leading-relaxed font-[500]" style={{ letterSpacing: '0.008em' }}>
+                  {zone.body}
+                </p>
 
-      {/* Features Section */}
-      <section ref={(el) => setSectionRef(el, 1)} className="h-screen flex items-center justify-start px-4 md:px-20 pointer-events-auto">
-        <div className="max-w-2xl bg-[#0B0F1A]/60 backdrop-blur-md p-10 rounded-2xl border border-white/10 shadow-[0_0_50px_rgba(6,182,212,0.1)]">
-          <h2 className="tunnel-title text-4xl md:text-6xl font-bold mb-6 font-exo">FEATURE_ZONE</h2>
-          <p className="tunnel-text text-slate-300 text-lg leading-relaxed font-mono">
-            High-performance WebGL rendering paired with state-of-the-art interaction design.
-            Every layer of depth is meticulously optimized for maximum impact.
-          </p>
-        </div>
-      </section>
+                <div className="flex flex-wrap gap-3 pt-2">
+                  {zone.secondary && (
+                    <Link to={zone.secondary.to} className="tunnel-hit btn-ghost text-sm px-6 py-3 inline-flex items-center gap-2">
+                      {zone.secondary.label}
+                    </Link>
+                  )}
+                  <Link
+                    to={zone.cta.to}
+                    className={`tunnel-hit btn-primary text-sm px-8 py-3.5 inline-flex items-center gap-2 ${zone.cta.accent ? 'bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-700' : ''}`}
+                  >
+                    {zone.cta.label}
+                    <ArrowRight strokeWidth={2.3} size={18} aria-hidden />
+                  </Link>
+                </div>
 
-      {/* AI Tools Section */}
-      <section ref={(el) => setSectionRef(el, 2)} className="h-screen flex items-center justify-end px-4 md:px-20 pointer-events-auto">
-        <div className="max-w-2xl bg-[#0B0F1A]/60 backdrop-blur-md p-10 rounded-2xl border border-white/10 shadow-[0_0_50px_rgba(236,72,153,0.1)] text-right">
-          <h2 className="tunnel-title text-4xl md:text-6xl font-bold mb-6 text-[#ec4899] font-exo">AI_INTEGRATION</h2>
-          <p className="tunnel-text text-slate-300 text-lg leading-relaxed font-mono">
-            Neural networks processing design requests in real-time. 
-            Welcome to the cognitive layer of your workflow.
-          </p>
-        </div>
-      </section>
+                <p className="text-[11px] text-slate-500 font-mono tracking-wide pt-1">
+                  Zone {Math.min(activeZone + 1, ZONES.length)}/{ZONES.length} · synced to scroll scrub
+                </p>
+              </div>
+            </motion.div>
+          </motion.article>
+        </AnimatePresence>
 
-      {/* Pricing Section */}
-      <section ref={(el) => setSectionRef(el, 3)} className="h-screen flex items-center justify-center px-4 md:px-20 pointer-events-auto">
-        <div className="text-center max-w-4xl mx-auto bg-[#0B0F1A]/60 backdrop-blur-md p-10 rounded-2xl border border-[#CA8A04]/30 shadow-[0_0_50px_rgba(202,138,4,0.15)]">
-          <h2 className="tunnel-title text-4xl md:text-6xl font-bold mb-6 text-[#CA8A04] font-exo">ACCESS_LEVELS</h2>
-          <p className="tunnel-text text-slate-300 text-lg leading-relaxed font-mono max-w-2xl mx-auto">
-            Unlock the full potential of the DataTunnel. 
-            Choose your clearance level and begin the override sequence.
-          </p>
-          <button className="tunnel-text mt-8 px-8 py-4 bg-transparent border border-[#CA8A04] text-[#CA8A04] font-bold uppercase tracking-widest hover:bg-[#CA8A04] hover:text-[#0B0F1A] transition-all duration-300 interactive cursor-pointer">
-            Initialize Access
-          </button>
+        {/* Progress HUD */}
+        <div className="mt-10 flex gap-2 justify-center pointer-events-auto">
+          {ZONES.map((z, idx) => (
+            <div
+              key={z.id}
+              className="h-[3px] flex-1 max-w-[64px] rounded-full overflow-hidden bg-white/12"
+              title={z.id}
+            >
+              <motion.div
+                className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-fuchsia-500 origin-left"
+                initial={false}
+                animate={{ scaleX: activeZone >= idx ? 1 : 0.12 }}
+                transition={{ duration: 0.45, ease: [0.33, 1, 0.68, 1] }}
+              />
+            </div>
+          ))}
         </div>
-      </section>
-
-      {/* Contact Section */}
-      <section ref={(el) => setSectionRef(el, 4)} className="h-screen flex items-center justify-center px-4 md:px-20 pointer-events-auto">
-        <div className="text-center w-full max-w-4xl">
-          <h2 className="tunnel-title text-5xl md:text-7xl font-bold mb-4 font-exo">CONNECTION_ESTABLISHED</h2>
-          <p className="tunnel-text text-[#06b6d4] font-mono text-xl uppercase tracking-widest mb-12">
-            Secure channel open. Ready for transmission.
-          </p>
-          <div className="flex justify-center gap-6">
-             <button className="tunnel-text px-8 py-4 bg-[#06b6d4]/10 border border-[#06b6d4] text-[#06b6d4] hover:bg-[#06b6d4] hover:text-[#0B0F1A] rounded-full transition-all interactive font-mono uppercase text-sm cursor-pointer">
-              Send_Data
-            </button>
-            <button className="tunnel-text px-8 py-4 bg-[#ec4899]/10 border border-[#ec4899] text-[#ec4899] hover:bg-[#ec4899] hover:text-[#0B0F1A] rounded-full transition-all interactive font-mono uppercase text-sm cursor-pointer">
-              Terminate
-            </button>
-          </div>
-        </div>
-      </section>
-
+      </div>
     </div>
   );
-};
+}
+
+export default TunnelSectionsOverlay;

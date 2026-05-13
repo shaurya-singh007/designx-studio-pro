@@ -74,68 +74,31 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen px-4 pb-4 animate-fade-in relative z-10">
+    <div className="min-h-screen relative z-10 overflow-x-hidden" onClick={() => !user && navigate('/auth')}>
       
-      {/* Live Video Background */}
-      <div className="fixed inset-0 w-full h-full -z-20 overflow-hidden">
-        <div className="absolute inset-0 bg-black/50 z-10 mix-blend-multiply" />
-        <video 
-          autoPlay loop muted playsInline
-          className="w-full h-full object-cover scale-110 blur-[2px]"
-          src="https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-connection-loop-14986-large.mp4"
-        />
-      </div>
+      {user && <div className="fixed inset-0 bg-bg-base -z-10" />}
 
       {/* Hero */}
-
-      <motion.section className="pt-6 pb-8 text-center"
-        initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.12 } } }}>
-        {/* Hero Text */}
-        <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-5"
-          style={{ background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', backdropFilter: 'blur(10px)' }}>
-          <Crown size={12} className="text-gold" />
-          <span className="text-[11px] font-700 text-royal-light tracking-wider uppercase">Professional Design Studio</span>
-        </motion.div>
-
-        <motion.h1 variants={fadeUp} className="text-4xl font-800 leading-[1.1] mb-4 drop-shadow-2xl"
-          style={{ letterSpacing: '-0.03em' }}>
-          <span className="text-white">Create</span>{' '}
-          <span style={{ background: 'linear-gradient(135deg, #A855F7, #FCD34D)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-            Stunning
-          </span>
-          <br />
-          <span className="text-white">Designs Fast</span>
-        </motion.h1>
-
-        <motion.p variants={fadeUp} className="text-white/80 text-sm leading-relaxed mb-8 px-4 font-500 drop-shadow-lg">
-          A professional-grade design studio with AI superpowers. Posters, banners, social media — all in one place.
-        </motion.p>
-
-        <motion.div variants={fadeUp} className="flex gap-3 justify-center flex-wrap pb-12">
-          <button className="btn-gold flex items-center gap-2 text-sm"
-            onClick={() => navigate('/editor')}>
-            <Zap size={16} strokeWidth={2.5} />
-            Get Started Free
-          </button>
-          {!user && (
-            <button className="flex items-center gap-2 text-sm font-600 text-white px-5 py-3 rounded-full"
-              style={{ border: '1px solid rgba(255,255,255,0.4)', background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(10px)' }}
-              onClick={() => navigate('/auth')}>
-              Sign In
-            </button>
-          )}
-        </motion.div>
-      </motion.section>
+      {user ? (
+        <motion.section className="pt-20 pb-8 text-center px-4"
+          initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.12 } } }}>
+          {/* Content for logged in users */}
+          <motion.h1 variants={fadeUp} className="text-4xl md:text-6xl font-serif font-bold text-white mb-6">
+            Welcome back
+          </motion.h1>
+          {/* ... existing Hero content for logged in users if needed ... */}
+        </motion.section>
+      ) : null}
 
 
       {/* Stats */}
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
-        className="grid grid-cols-3 gap-3 mb-8">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
+        className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-32 px-10 border-y border-white/5 py-20">
         {Object.entries(stats).map(([key, val]) => (
-          <div key={key} className="glass-card p-3 text-center">
-            <div className="text-xl font-800" style={{ background: 'linear-gradient(135deg,#A78BFA,#F59E0B)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{val}</div>
-            <div className="text-[10px] text-muted capitalize font-500 mt-0.5">{key}</div>
+          <div key={key} className="text-center">
+            <div className="text-5xl font-serif font-bold text-white mb-2">{val}</div>
+            <div className="text-xs text-white/30 uppercase tracking-[0.2em] font-medium">{key}</div>
           </div>
         ))}
       </motion.div>
@@ -170,50 +133,37 @@ export default function Landing() {
         </motion.section>
       )}
 
-      {/* Features with Scroll Reveal */}
       <motion.section 
-        initial={{ opacity: 0, y: 80 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true, margin: "-50px" }}
-        className="mb-8"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+        viewport={{ once: true }}
+        className="mb-32 px-10"
       >
-        <h2 className="section-title mb-4 text-xl">Everything You Need</h2>
-        <div className="grid grid-cols-2 gap-3">
+        <h2 className="text-4xl font-serif font-bold text-white mb-16 text-center tracking-tight">CRAFTED FOR EXCELLENCE</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
           {FEATURES.map(({ icon: Icon, title, desc }, i) => (
             <motion.div key={title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }} viewport={{ once: true }}
-              className="glass-card p-4">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
-                style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.3), rgba(245,158,11,0.2))' }}>
-                <Icon size={18} className="text-royal-light" />
+              className="group">
+              <div className="text-white/20 group-hover:text-white/100 transition-colors duration-500 mb-6">
+                <Icon size={32} strokeWidth={1} />
               </div>
-              <div className="text-xs font-700 text-platinum mb-1">{title}</div>
-              <div className="text-[10px] text-muted leading-relaxed">{desc}</div>
+              <div className="text-xl font-serif font-bold text-white mb-4 uppercase tracking-wider">{title}</div>
+              <div className="text-white/40 leading-relaxed font-light text-lg">{desc}</div>
             </motion.div>
           ))}
         </div>
       </motion.section>
 
 
-      {/* Pro CTA Card */}
-      <motion.section initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.6 }}
-        className="rounded-2xl p-5 mb-4 relative overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #7C3AED 0%, #5B21B6 60%, #B45309 100%)' }}>
-        <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-20"
-          style={{ background: 'radial-gradient(circle, #FCD34D, transparent)', transform: 'translate(30%, -30%)' }} />
-        <Crown size={24} className="text-gold mb-2" />
-        <h3 className="text-xl font-800 text-white mb-1">Upgrade to Pro</h3>
-        <p className="text-sm text-white/70 mb-4">Unlock 4K exports, 50 AI credits/month & 500+ premium templates</p>
-        <div className="flex items-center justify-between">
-          <div>
-            <span className="text-2xl font-800 text-gold">$9</span>
-            <span className="text-white/60 text-xs">/month</span>
-          </div>
-          <button className="btn-gold text-sm flex items-center gap-2" onClick={() => navigate('/profile')}>
-            <Star size={14} strokeWidth={2.5} />
-            Go Pro
-          </button>
-        </div>
+      <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 1 }}
+        className="px-10 py-32 bg-white text-black text-center mb-20">
+        <h3 className="text-5xl md:text-7xl font-serif font-bold mb-8 tracking-tighter">READY TO START?</h3>
+        <p className="text-black/60 text-xl mb-12 max-w-xl mx-auto font-light">Join 180K+ designers creating the future of visual communication.</p>
+        <button className="px-12 py-5 bg-black text-white text-sm font-bold uppercase tracking-widest hover:bg-black/90 transition-colors"
+          onClick={() => navigate('/auth')}>
+          GET STARTED NOW
+        </button>
       </motion.section>
     </div>
   );
