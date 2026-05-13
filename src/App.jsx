@@ -116,19 +116,6 @@ function AppShell() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  if (isAuth || isLanding || isTunnel) {
-    return (
-      <div className="relative">
-        <Toasts />
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/tunnel" element={<DataTunnel />} />
-          <Route path="/auth" element={<Auth />} />
-        </Routes>
-      </div>
-    );
-  }
-
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden"
       style={{ background: 'var(--bg-base)' }}>
@@ -136,18 +123,21 @@ function AppShell() {
       <Toasts />
       {!isCanvas && <TopBar />}
 
-      <main className={`relative z-10 ${isCanvas ? '' : 'pt-[60px] pb-[72px]'}`}>
+      <main className={`relative z-10 ${isCanvas ? '' : (isLanding || isAuth || isTunnel ? '' : 'pt-[60px] pb-[72px]')}`}>
         <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/tunnel" element={<DataTunnel />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/home" element={<Protected><Landing /></Protected>} />
           <Route path="/dashboard" element={<Protected><Landing /></Protected>} />
           <Route path="/editor" element={<Protected><CanvasEditor /></Protected>} />
           <Route path="/templates" element={<Protected><Templates /></Protected>} />
           <Route path="/profile" element={<Protected><Profile /></Protected>} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
 
-      {!isCanvas && <BottomNav />}
+      {!isCanvas && !isLanding && !isAuth && !isTunnel && <BottomNav />}
     </div>
   );
 }

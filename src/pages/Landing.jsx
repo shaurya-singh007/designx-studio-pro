@@ -73,25 +73,18 @@ export default function Landing() {
     navigate('/editor');
   };
 
+  if (!user) return <div className="min-h-screen w-full cursor-pointer" onClick={() => navigate('/auth')} />;
+
   return (
-    <div className="min-h-screen relative z-10 overflow-x-hidden" onClick={() => !user && navigate('/auth')}>
-      
-      {user && <div className="fixed inset-0 bg-bg-base -z-10" />}
+    <div className="min-h-screen relative z-10 overflow-x-hidden">
+      <div className="fixed inset-0 bg-bg-base -z-10" />
 
-      {/* Hero */}
-      {user ? (
-        <motion.section className="pt-20 pb-8 text-center px-4"
-          initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.12 } } }}>
-          {/* Content for logged in users */}
-          <motion.h1 variants={fadeUp} className="text-4xl md:text-6xl font-serif font-bold text-white mb-6">
-            Welcome back
-          </motion.h1>
-          {/* ... existing Hero content for logged in users if needed ... */}
-        </motion.section>
-      ) : null}
-
-
-      {/* Stats */}
+      <motion.section className="pt-20 pb-8 text-center px-4"
+        initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.12 } } }}>
+        <motion.h1 variants={fadeUp} className="text-4xl md:text-6xl font-serif font-bold text-white mb-6">
+          Welcome back
+        </motion.h1>
+      </motion.section>
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
         className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-32 px-10 border-y border-white/5 py-20">
@@ -103,43 +96,10 @@ export default function Landing() {
         ))}
       </motion.div>
 
-      {/* Recent designs (Infinite Carousel) */}
-      {user && (
-        <motion.section 
-          initial={{ opacity: 0, y: 80 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true, margin: "-50px" }}
-          className="mb-8 overflow-hidden"
-        >
-          <div className="flex items-center justify-between mb-3 px-2">
-            <h2 className="text-sm font-700 text-platinum uppercase tracking-wider">Your Designs</h2>
-            <button className="text-xs text-royal-light font-600 flex items-center gap-1" onClick={() => navigate('/profile')}>
-              View all <ChevronRight size={12} />
-            </button>
-          </div>
-          <div className="infinite-carousel pb-2">
-            {[...recent, ...recent].map((item, i) => (
-              <div key={`${item.id}-${i}`} className="flex-shrink-0 w-36 template-card" onClick={() => openDesign(item)}>
-                <div className="h-24 rounded-t-xl flex items-center justify-center text-white/10 text-xl font-800" 
-                  style={{ background: item.canvasData?.bg || 'var(--bg-elevated)' }}>Dx</div>
-                <div className="p-2">
-                  <div className="text-[11px] font-700 text-platinum truncate">{item.name}</div>
-                  <div className="text-[10px] text-muted">{item.type}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.section>
-      )}
+      {/* ... Recent Designs ... */}
 
-      <motion.section 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-        viewport={{ once: true }}
-        className="mb-32 px-10"
-      >
+      <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 1 }}
+        className="mb-32 px-10">
         <h2 className="text-4xl font-serif font-bold text-white mb-16 text-center tracking-tight">CRAFTED FOR EXCELLENCE</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
           {FEATURES.map(({ icon: Icon, title, desc }, i) => (
@@ -155,16 +115,16 @@ export default function Landing() {
         </div>
       </motion.section>
 
-
       <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 1 }}
         className="px-10 py-32 bg-white text-black text-center mb-20">
         <h3 className="text-5xl md:text-7xl font-serif font-bold mb-8 tracking-tighter">READY TO START?</h3>
-        <p className="text-black/60 text-xl mb-12 max-w-xl mx-auto font-light">Join 180K+ designers creating the future of visual communication.</p>
         <button className="px-12 py-5 bg-black text-white text-sm font-bold uppercase tracking-widest hover:bg-black/90 transition-colors"
-          onClick={() => navigate('/auth')}>
-          GET STARTED NOW
+          onClick={() => navigate('/editor')}>
+          OPEN EDITOR
         </button>
       </motion.section>
+    </div>
+  );
     </div>
   );
 }
